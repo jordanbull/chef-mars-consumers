@@ -16,6 +16,10 @@ Vagrant.configure("2") do |config|
         :jdk_version => 7,
         :install_flavor => "openjdk"
       },
+      :jetty => {
+      	:user => "vagrant",
+      	:group => "vagrant"
+      },
       :nucleus => {
       	:access_key_id => $aws[:dev][:access_key_id],
 		:access_key_secret => $aws[:dev][:access_key_secret]
@@ -25,13 +29,16 @@ Vagrant.configure("2") do |config|
           :version => "1.3.3",
           :source_url => "https://download.elasticsearch.org/logstash/logstash/logstash-1.3.3-flatjar.jar",
           :debug => true,
-          :base_config_cookbook => "logstash-filter",
-          :base_config => "agent.conf.erb"
+          :base_config_cookbook => "nucleus-proxy",
+          :base_config => "agent.conf.erb",
         }
       }
     }
     chef.run_list = [
-      "recipe[nucleus]"
+      #"recipe[jetty::default]",
+      #"recipe[jetty::logback]",
+      #"recipe[logstash::agent]",
+      "recipe[nucleus-proxy]"
     ]
   end
 end

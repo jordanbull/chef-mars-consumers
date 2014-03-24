@@ -60,12 +60,11 @@
 			<Set name="handlers">
 				<Array type="org.eclipse.jetty.server.Handler">
 					<Item>
-						<New id="Contexts"
-							class="org.eclipse.jetty.server.handler.ContextHandlerCollection" />
+						<New id="Contexts" class="org.eclipse.jetty.server.handler.ContextHandlerCollection" />
 					</Item>
-					<Item>
+					<!--<Item>
 						<New id="DefaultHandler" class="org.eclipse.jetty.server.handler.DefaultHandler" />
-					</Item>
+					</Item>-->
 				</Array>
 			</Set>
 		</New>

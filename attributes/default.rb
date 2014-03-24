@@ -1,0 +1,6 @@
+default[:nucleusproxy][:version] = "1.22.5-SNAPSHOT"
+default[:nucleusproxy][:source][:warfile] = "tnt-nucleus-#{node[:nucleusproxy][:version]}.war"
+default[:nucleusproxy][:source][:s3][:bucket] = "tnt-build-release"
+default[:nucleusproxy][:source][:s3][:path] = "tnt-nucleus/dev"
+default[:nucleusproxy][:source][:s3][:fullpath] = "#{node[:nucleusproxy][:source][:s3][:path]}/#{node[:nucleusproxy][:source][:warfile]}"
+default[:nucleusproxy][:localwar] = "root.war"
