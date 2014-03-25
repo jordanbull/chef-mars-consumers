@@ -20,7 +20,7 @@ Vagrant.configure("2") do |config|
       	:user => "vagrant",
       	:group => "vagrant"
       },
-      :nucleus => {
+      :nucleusproxy => {
       	:access_key_id => $aws[:dev][:access_key_id],
 		:access_key_secret => $aws[:dev][:access_key_secret]
       },
