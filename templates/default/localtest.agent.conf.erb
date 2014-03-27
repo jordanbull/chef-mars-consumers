@@ -1,0 +1,27 @@
+input {
+	file {
+		path => "/opt/jetty/logs/jetty.log"
+		codec => "json"
+		type => "application_logs"
+	}
+	file {
+		path => "/opt/jetty/logs/logback-access.log"
+		codec => "json"
+		type => "access_logs"
+	}
+}
+
+filter {
+	if [type] == "access_logs" {
+		mutate {
+			replace => [ "@fields.status_code", "%{@fields.status_code}" ]
+		}
+	}
+}
+
+output {
+	file {
+		path => "/tmp/combined-logstash.log"
+		flush_interval => 0
+	}
+}

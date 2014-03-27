@@ -1,0 +1,31 @@
+input {
+	file {
+		path => "/opt/jetty/logs/jetty.log"
+		codec => "json"
+		type => "application_logs"
+	}
+	file {
+		path => "/opt/jetty/logs/logback-access.log"
+		codec => "json"
+		type => "access_logs"
+	}
+}
+
+filter {
+	if [type] == "access_logs" {
+		mutate {
+			replace => [ "@fields.status_code", "%{@fields.status_code}" ]
+		}
+	}
+}
+
+output {
+	if [type] != "access_logs" or [@fields.status_code] =~ /^[45]\d\d/ {
+		sqs {
+			queue => "logstash"
+			region => "us-east-1"
+			use_ssl => false
+			codec => json
+		}
+	}
+}
