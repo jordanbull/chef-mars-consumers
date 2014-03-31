@@ -14,7 +14,7 @@ input {
 filter {
 	if [type] == "access_logs" {
 		mutate {
-			replace => [ "@fields.status_code", "%{@fields.status_code}" ]
+			convert => [ "@fields.status_code", "string" ]
 		}
 	}
 }
