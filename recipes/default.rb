@@ -24,3 +24,20 @@ s3_file "#{node[:jetty][:webappsdir]}/#{node[:nucleusproxy][:localwar]}" do
 	owner node[:jetty][:user]
 	group node[:jetty][:group]
 end
+
+apt_package "god" do
+	action :install
+end
+
+directory "#{node[:nucleusproxy][:god][:goddir]}" do
+	action :create
+end
+
+directory "#{node[:nucleusproxy][:god][:conditionsdir]}" do
+	action :create
+end
+
+file "#{node[:nucleusproxy][:god][:conditionsdir]}/JvmHeapUsage.rb" do
+	action :create
+	path "JvmHeapUsage.rb"
+end

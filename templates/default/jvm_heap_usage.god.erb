@@ -1,0 +1,18 @@
+require "#{node[:nucleusproxy][:god][:conditionsdir]}/JvmHeapUsage.rb"
+
+God.watch do |w|
+	w.name = "tntNucleusService"
+	w.start = "service jetty start"
+	w.stop = "service jetty stop"
+	w.keepalive
+
+	w.behavior(:clean_pid_file)
+
+	w.restart_if do |restart|
+		restart.condition(:jvm_heap_usage) do |c|
+			c.interval = 5.minutes
+			c.above = 80.percent
+			c.times = [3, 5] # 3 out of 5 intervals
+		end
+	end
+end
