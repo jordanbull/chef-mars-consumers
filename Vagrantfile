@@ -21,7 +21,8 @@ Vagrant.configure("2") do |config|
       	:group => "vagrant"
       },
       :nucleusproxy => {
-        :version => "1.22.5-SNAPSHOT-6",
+        :environment => "dev",
+        :version => "1.22.5-SNAPSHOT-10",
       	:access_key_id => $aws[:dev][:access_key_id],
 		:access_key_secret => $aws[:dev][:access_key_secret]
       },
