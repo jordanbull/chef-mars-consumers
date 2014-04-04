@@ -37,7 +37,26 @@ directory "#{node[:nucleusproxy][:god][:conditionsdir]}" do
 	action :create
 end
 
-file "#{node[:nucleusproxy][:god][:conditionsdir]}/JvmHeapUsage.rb" do
-	action :create
-	path "JvmHeapUsage.rb"
+execute "start-god" do
+	command "god -c #{node[:nucleusproxy][:god][:goddir]}/jvm_heap_usage.god.erb"
+end
+
+template "#{node[:nucleusproxy][:god][:conditionsdir]}/JvmHeapUsage.rb" do
+	source "JvmHeapUsage.rb"
+	owner node[:jetty][:user]
+	group node[:jetty][:group]
+end
+
+template "#{node[:nucleusproxy][:god][:conditionsdir]}/ServiceJettyAvailability.rb" do
+	source "ServiceJettyAvailability.rb"
+	owner node[:jetty][:user]
+	group node[:jetty][:group]
+end
+
+template "#{node[:nucleusproxy][:god][:goddir]}/jvm_heap_usage.god.erb" do
+	source "jvm_heap_usage.god.erb"
+	owner node[:jetty][:user]
+	group node[:jetty][:group]
+
+	notifies :run, "execute[start-god]", :delayed
 end
