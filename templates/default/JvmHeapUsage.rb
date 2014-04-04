@@ -52,24 +52,21 @@ module God
 				self.pid_file ? File.read(self.pid_file).strip.to_i : self.watch.pid
 			end
 
-			def child_pid
+			def jetty_pid
 				# Get the child pids.
-				pipe = IO.popen("ps -ef | grep #{self.pid}")
+				pipe = IO.popen("ps ax | grep jetty | grep -v grep")
 
-				child_pids = pipe.readlines.map do |line|
+				jetty_pid = pipe.readlines.map do |line|
 					parts = line.split(/\s+/)
-					parts[2] if parts[3] == pid.to_s and parts[2] != pipe.pid.to_s
+					parts[0]
 				end.compact
 
 				# Show the child processes.
-				child_pids.size == 0 ? nil : child_pids[0]
+				jetty_pid.size == 0 ? nil : jetty_pid[0]
 			end
 
-			def jvm_heap_usage_percentage(pid)
-				if pid == nil
-					return 0.percent
-				end
-
+			def jvm_heap_usage(pid)
+				heapUsage = nil
 				# for the following, keep in mind that S0 and S1 (survivor 0 & 1) will rotate roles after each garbage collection
 				# we only one will be in effect when calculating for heap usage and max cap
 
@@ -78,38 +75,83 @@ module God
 				# 192.0  192.0   0.0    0.0    2048.0   1244.0    4864.0      0.0     21248.0 2908.3      0    0.000   0      0.000    0.000
 				# we care about S0U/S1U (survivor space) & EU (eden space) & OU (old space)
 				results = IO.popen("jstat -gc #{pid}").readlines
-				headers = results[0].strip.split(/\s+/)
-				heapUsage = results[1].strip.split(/\s+/).map.with_index{|value, i|
-					["S0U", "S1U", "EU", "OU"].include?(headers[i]) ? value.to_f : nil
-				}.compact.inject{|sum, x| sum + x}
-				puts "heap usage: " + heapUsage.to_s
+				if results.size > 0
+					headers = results[0].strip.split(/\s+/)
+					heapUsage = results[1].strip.split(/\s+/).each_with_index.map {|value, i|
+						["S0U", "S1U", "EU", "OU"].include?(headers[i]) ? value.to_f : nil
+					}.compact.inject{|sum, x| sum + x}
+				end
 
-				#find out old gen max capacity, will look like the following
-				# OGCMN       OGCMX        OGC         OC       YGC   FGC    FGCT     GCT
-				# 4864.0     86016.0      4864.0      4864.0     0     0    0.000    0.000
-				# we care about OGCMX (max old generation capacity)
-				results = IO.popen("jstat -gcoldcapacity #{pid}").readlines
-				headers = results[0].strip.split(/\s+/)
-				oldGenCap = results[1].strip.split(/\s+/).map.with_index{|value, i|
-					["OGCMX"].include?(headers[i]) ? value.to_f : nil
-				}.compact.inject{|sum, x| sum + x}
-				puts "old gen cap: " + oldGenCap.to_s
+				return heapUsage
+			end
 
+			def jvm_new_gen_max(pid)
+				newGenCap = nil
 				# find out new gen max capacity (eden + survivor), will look like the following
 				# NGCMN      NGCMX       NGC      S0CMX     S0C     S1CMX     S1C       ECMX        EC      YGC   FGC
 				# 2432.0    43008.0     2432.0   4288.0    192.0   4288.0    192.0    34432.0     2048.0     0     0
 				# we care about S0CMX/S1CMX (max survivor space capacity) & ECMX (max eden space capcity)
 				results = IO.popen("jstat -gcnewcapacity #{pid}").readlines
-				headers = results[0].strip.split(/\s+/)
-				newGenCap = results[1].strip.split(/\s+/).map.with_index{|value, i|
-					["S0CMX", "ECMX"].include?(headers[i]) ? value.to_f : nil
-				}.compact.inject{|sum, x| sum + x}
-				puts "new gen cap: " + newGenCap.to_s
+				if results.size > 0
+					headers = results[0].strip.split(/\s+/)
+					newGenCap = results[1].strip.split(/\s+/).each_with_index.map {|value, i|
+						["S0CMX", "ECMX"].include?(headers[i]) ? value.to_f : nil
+					}.compact.inject{|sum, x| sum + x}
+				end
 
-				puts "total max cap: " + (newGenCap + oldGenCap).to_s
+				return newGenCap
+			end
 
-				puts (heapUsage / (newGenCap + oldGenCap)).percent
-				return (heapUsage / (newGenCap + oldGenCap) * 100).percent
+			def jvm_old_gen_max(pid)
+				oldGenCap = nil
+				#find out old gen max capacity, will look like the following
+				# OGCMN       OGCMX        OGC         OC       YGC   FGC    FGCT     GCT
+				# 4864.0     86016.0      4864.0      4864.0     0     0    0.000    0.000
+				# we care about OGCMX (max old generation capacity)
+				results = IO.popen("jstat -gcoldcapacity #{pid}").readlines
+				if results.size > 0
+					headers = results[0].strip.split(/\s+/)
+					oldGenCap = results[1].strip.split(/\s+/).each_with_index.map {|value, i|
+						["OGCMX"].include?(headers[i]) ? value.to_f : nil
+					}.compact.inject{|sum, x| sum + x}
+				end
+
+				return oldGenCap
+			end
+				
+			def jvm_heap_usage_percentage(pid)
+				if pid == nil
+					puts "jetty pid is nil"
+					return 0.percent
+				end
+
+				heapUsage = self.jvm_heap_usage(pid)
+				if heapUsage == nil
+					puts "jvm heap usage for pid #{pid} is unavailable"
+					return 0.percent
+				else
+					puts "jvm heap usage: #{heapUsage} KB"
+				end
+
+				oldGenCap = self.jvm_old_gen_max(pid)
+				if oldGenCap == nil
+					puts "old generation max capacity for pid #{pid} is unavailable"
+					return 0.percent
+				else
+					puts "old generation max capacity: #{oldGenCap} KB"
+				end
+
+				newGenCap = self.jvm_new_gen_max(pid)
+				if newGenCap == nil
+					puts "new generation max capacity for pid #{pid} is unavailable"
+					return 0.percent
+				else
+					puts "new generation max capacity: #{newGenCap} KB"
+				end
+
+				jvmHeapUsagePercentage = (heapUsage / (newGenCap + oldGenCap) * 100).percent
+				puts "jvm heap usage percentage: #{jvmHeapUsagePercentage}%"
+				return jvmHeapUsagePercentage
 			end
 
 			def valid?
@@ -120,7 +162,7 @@ module God
 			end
 
 			def test
-				@timeline.push(self.jvm_heap_usage_percentage(self.child_pid))
+				@timeline.push(self.jvm_heap_usage_percentage(self.jetty_pid))
 				self.info = []
 
 				history = "[" + @timeline.map { |x| "#{x > self.above ? '*' : ''}#{x}%%" }.join(", ") + "]"
