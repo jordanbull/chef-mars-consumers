@@ -10,7 +10,16 @@
 include_recipe 'apt'
 include_recipe 'java'
 include_recipe 'jetty::default'
-include_recipe 'jetty::logback'
+
+template "#{node[:jetty][:homedir]}/start.ini" do
+	source "start.ini.erb"
+	owner node[:jetty][:user]
+	group node[:jetty][:group]
+	variables({
+		:environment => node[:nucleusproxy][:environment]
+	})
+	notifies :restart, "service[jetty]", :delayed
+end
 
 s3_file "#{node[:jetty][:webappsdir]}/#{node[:nucleusproxy][:localwar]}" do
 	remote_path "#{node[:nucleusproxy][:source][:s3][:fullpath]}"

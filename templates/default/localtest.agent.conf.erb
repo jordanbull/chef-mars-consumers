@@ -1,0 +1,37 @@
+input {
+	file {
+		path => "/opt/jetty/logs/jetty.log"
+		codec => "json"
+		type => "server_logs"
+	}
+	file {
+		path => "/opt/jetty/logs/tnt-nucleus.log"
+		codec => "json"
+		type => "application_logs"
+	}
+	file {
+		path => "/opt/jetty/logs/logback-access.log"
+		codec => "json"
+		type => "access_logs"
+	}
+}
+
+filter {
+	if [type] == "access_logs" {
+		mutate {
+			convert => [ "@fields.status_code", "string" ]
+		}
+	}
+	if [type] != "application_logs" {
+		mutate {
+			add_field => { "environmentName" => "<%= node['nucleusproxy']['environment'] %>" }
+		}
+	}
+}
+
+output {
+	file {
+		path => "/tmp/combined-logstash.log"
+		flush_interval => 0
+	}
+}

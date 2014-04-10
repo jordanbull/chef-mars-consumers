@@ -21,24 +21,21 @@ Vagrant.configure("2") do |config|
       	:group => "vagrant"
       },
       :nucleusproxy => {
+        :environment => "dev",
+        :version => "1.22.5-SNAPSHOT-10",
       	:access_key_id => $aws[:dev][:access_key_id],
 		:access_key_secret => $aws[:dev][:access_key_secret]
       },
       :logstash => {
         :agent => {
-          :version => "1.3.3",
-          :source_url => "https://download.elasticsearch.org/logstash/logstash/logstash-1.3.3-flatjar.jar",
-          :debug => true,
-          :base_config_cookbook => "nucleus-proxy",
-          :base_config => "agent.conf.erb",
+          :base_config => "localtest.agent.conf.erb",
+          :debug => true
         }
       }
     }
     chef.run_list = [
-      #"recipe[jetty::default]",
-      #"recipe[jetty::logback]",
-      #"recipe[logstash::agent]",
-      "recipe[nucleus-proxy]"
+      "recipe[nucleus-proxy]",
+      "recipe[logstash::agent]"
     ]
   end
 end
