@@ -46,26 +46,26 @@ directory "#{node[:nucleusproxy][:god][:conditionsdir]}" do
 	action :create
 end
 
-execute "start-god" do
-	command "god -c #{node[:nucleusproxy][:god][:goddir]}/jvm_heap_usage.god.erb"
-end
-
-template "#{node[:nucleusproxy][:god][:conditionsdir]}/JvmHeapUsage.rb" do
+cookbook_file "#{node[:nucleusproxy][:god][:conditionsdir]}/JvmHeapUsage.rb" do
 	source "JvmHeapUsage.rb"
 	owner node[:jetty][:user]
 	group node[:jetty][:group]
 end
 
-template "#{node[:nucleusproxy][:god][:conditionsdir]}/ServiceJettyAvailability.rb" do
+cookbook_file "#{node[:nucleusproxy][:god][:conditionsdir]}/ServiceJettyAvailability.rb" do
 	source "ServiceJettyAvailability.rb"
 	owner node[:jetty][:user]
 	group node[:jetty][:group]
 end
 
-template "#{node[:nucleusproxy][:god][:goddir]}/jvm_heap_usage.god.erb" do
-	source "jvm_heap_usage.god.erb"
+cookbook_file "#{node[:nucleusproxy][:god][:goddir]}/jvm_heap_usage.god.rb" do
+	source "jvm_heap_usage.god.rb"
 	owner node[:jetty][:user]
 	group node[:jetty][:group]
 
 	notifies :run, "execute[start-god]", :delayed
+end
+
+execute "start-god" do
+	command "god -c #{node[:nucleusproxy][:god][:goddir]}/jvm_heap_usage.god.erb"
 end
