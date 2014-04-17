@@ -67,5 +67,7 @@ cookbook_file "#{node[:nucleusproxy][:god][:goddir]}/jvm_heap_usage.god.rb" do
 end
 
 execute "start-god" do
-	command "god -c #{node[:nucleusproxy][:god][:goddir]}/jvm_heap_usage.god.erb"
+	user "root"
+	command "god -c #{node[:nucleusproxy][:god][:goddir]}/jvm_heap_usage.god.rb"
+	action :nothing
 end
