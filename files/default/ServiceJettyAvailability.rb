@@ -44,7 +44,7 @@ module God
 
 			def service_jetty_available
 				# Get the child pids.
-				pipe = IO.popen("ps ax | grep jetty | grep -v grep | grep -v daemon")
+				pipe = IO.popen("ps aux | grep jetty | grep -v grep | grep -v daemon | awk '{print $2}'")
 
 				jetty_pid = pipe.readlines.map do |line|
 					parts = line.split(/\s+/)
@@ -52,7 +52,13 @@ module God
 				end.compact
 
 				# Show the child processes.
-				jetty_pid.size > 0 ? true : false
+				if (jetty_pid.size > 0)
+					puts "jetty process (#{jetty_pid}) is available"
+					return true
+				else
+					puts "jetty process not available"
+					return false
+				end
 			end
 
 			def valid?

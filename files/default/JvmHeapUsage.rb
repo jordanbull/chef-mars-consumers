@@ -54,7 +54,7 @@ module God
 
 			def jetty_pid
 				# Get the child pids.
-				pipe = IO.popen("ps ax | grep jetty | grep -v grep | grep -v daemon")
+				pipe = IO.popen("ps aux | grep jetty | grep -v grep | grep -v daemon | awk '{print $2}'")
 
 				jetty_pid = pipe.readlines.map do |line|
 					parts = line.split(/\s+/)
