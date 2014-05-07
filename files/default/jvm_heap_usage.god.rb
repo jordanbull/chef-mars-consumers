@@ -6,6 +6,7 @@ God.watch do |w|
 	w.start = ""
 	w.stop = ""
 	w.restart = "service jetty restart"
+	w.pid_file = "/var/run/jetty.pid"	# this is the pid file for jetty started by upstart as a service
 
 	w.behavior(:clean_pid_file)
 

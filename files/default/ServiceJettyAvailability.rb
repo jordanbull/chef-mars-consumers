@@ -42,9 +42,18 @@ module God
 				self.pid_file ? File.read(self.pid_file).strip.to_i : self.watch.pid
 			end
 
+			def pid_valid(pid)
+				Integer(pid) != nil rescue false
+			end
+
 			def service_jetty_available
+				if self.pid_valid(self.pid)
+					puts "self.pid is available (#{self.pid})"
+					return self.pid
+				end
+
 				# Get the child pids.
-				pipe = IO.popen("ps aux | grep jetty | grep -v grep | grep -v daemon | awk '{print $2}'")
+				pipe = IO.popen("ps aux | grep jetty | grep start.jar | grep -v grep | awk '{print $2}'")
 
 				jetty_pid = pipe.readlines.map do |line|
 					parts = line.split(/\s+/)
