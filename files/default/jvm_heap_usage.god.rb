@@ -12,9 +12,9 @@ God.watch do |w|
 
 	w.restart_if do |restart|
 		restart.condition(:jvm_heap_usage) do |c|
-			c.interval = 5.minutes
-			c.above = 80.percent
-			c.times = [3, 5] # 3 out of 5 intervals
+			c.interval = 30.seconds
+			c.above = 70.percent
+			c.times = [4, 5] # 4 out of 5 intervals
 		end
 
 		restart.condition(:service_jetty_availability) do |c|
