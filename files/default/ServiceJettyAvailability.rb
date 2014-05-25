@@ -53,12 +53,13 @@ module God
 				end
 
 				# Get the child pids.
-				pipe = IO.popen("ps aux | grep jetty | grep start.jar | grep -v grep | awk '{print $2}'")
-
-				jetty_pid = pipe.readlines.map do |line|
-					parts = line.split(/\s+/)
-					parts[0]
-				end.compact
+				jetty_ps_cmd = "ps aux | grep jetty | grep start.jar | grep -v grep | awk '{print $2}'"
+				jetty_pid = IO.popen(jetty_ps_cmd) do |jetty|
+					jetty.readlines.map do |line|
+						parts = line.split(/\s+/)
+						parts[0]
+					end.compact
+				end
 
 				# Show the child processes.
 				if (jetty_pid.size > 0)
