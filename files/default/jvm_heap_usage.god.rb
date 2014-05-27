@@ -1,5 +1,4 @@
 require "/opt/god/conditions/JvmHeapUsage.rb"
-require "/opt/god/conditions/ServiceJettyAvailability.rb"
 
 God.watch do |w|
 	w.name = "tntNucleusService"
@@ -17,10 +16,10 @@ God.watch do |w|
 			c.times = [4, 5] # 4 out of 5 intervals
 		end
 
-		restart.condition(:service_jetty_availability) do |c|
+		restart.condition(:process_running) do |c|
 			c.interval = 1.minute
-			c.available = false
-			c.times = [3, 3] # 5 out of 5 intervals
+			c.running = false
+			c.times = [3, 3] # 3 out of 3 intervals
 		end
 	end
 end
