@@ -34,7 +34,8 @@ s3_file "#{node[:jetty][:webappsdir]}/#{node[:nucleusproxy][:localwar]}" do
 	group node[:jetty][:group]
 end
 
-apt_package "god" do
+gem_package "god" do
+	version "0.13.4"
 	action :install
 end
 
