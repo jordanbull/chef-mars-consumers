@@ -9,6 +9,15 @@ God.watch do |w|
 
 	w.behavior(:clean_pid_file)
 
+	# determine the state on startup
+	w.transition(:init, :up) do |on|
+		on.condition(:process_running) do |c|
+			c.interval = 1.day
+			c.running = true
+		end
+	end
+
+	# determin conditions for restart
 	w.restart_if do |restart|
 		restart.condition(:jvm_heap_usage) do |c|
 			c.interval = 30.seconds
@@ -20,6 +29,15 @@ God.watch do |w|
 			c.interval = 1.minute
 			c.running = false
 			c.times = [3, 3] # 3 out of 3 intervals
+		end
+	end
+
+	# watch for service flapping
+	w.lifecycle do |on|
+		on.condition(:flapping) do |c|
+			c.to_state = :restart
+			c.times = 2
+			c.within = 5.minutes
 		end
 	end
 end
