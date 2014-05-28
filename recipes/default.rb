@@ -100,10 +100,20 @@ cookbook_file "#{node[:nucleusproxy][:god][:conditionsdir]}/ServiceJettyAvailabi
 	group node[:jetty][:group]
 end
 
-cookbook_file "#{node[:nucleusproxy][:god][:goddir]}/jvm_heap_usage.god.rb" do
-	source "jvm_heap_usage.god.rb"
+template "#{node[:nucleusproxy][:god][:goddir]}/jvm_heap_usage.god.rb" do
+	source "jvm_heap_usage.god.rb.erb"
 	owner node[:jetty][:user]
 	group node[:jetty][:group]
+
+	variables({
+		:to_email => to_email,
+		:from_email => from_email,
+		:server_domain => server_domain,
+		:tunnel_server_host => tunnel_server_host,
+		:tunnel_server_port => tunnel_server_port,
+		:smtp_user => smtp_user,
+		:smtp_password => smtp_password
+	})
 
 	notifies :run, "execute[start-god]", :delayed
 end
