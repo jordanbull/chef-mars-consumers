@@ -94,12 +94,6 @@ cookbook_file "#{node[:nucleusproxy][:god][:conditionsdir]}/JvmHeapUsage.rb" do
 	group node[:jetty][:group]
 end
 
-cookbook_file "#{node[:nucleusproxy][:god][:conditionsdir]}/ServiceJettyAvailability.rb" do
-	source "ServiceJettyAvailability.rb"
-	owner node[:jetty][:user]
-	group node[:jetty][:group]
-end
-
 template "#{node[:nucleusproxy][:god][:goddir]}/jvm_heap_usage.god.rb" do
 	source "jvm_heap_usage.god.rb.erb"
 	owner node[:jetty][:user]
