@@ -22,7 +22,7 @@ God.contact(:email) do |c|
 end
 
 God.watch do |w|
-	w.name = "tntNucleusService"
+	w.name = "tntNucleusService-<%= @service_env %>"
 	w.start = ""
 	w.stop = ""
 	w.restart = "service jetty restart"

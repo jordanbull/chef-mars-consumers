@@ -12,6 +12,8 @@ include_recipe 'java'
 include_recipe 'jetty::default'
 
 # set up variables
+service_env = "#{node[:nucleusproxy][:environment]}"
+
 to_email = "#{node[:nucleusproxy][:god][:notification][:to]}"
 from_email = "#{node[:nucleusproxy][:god][:notification][:from]}"
 server_domain = "#{node[:nucleusproxy][:email][:domain]}"
@@ -100,6 +102,7 @@ template "#{node[:nucleusproxy][:god][:goddir]}/jvm_heap_usage.god.rb" do
 	group node[:jetty][:group]
 
 	variables({
+		:service_env => service_env,
 		:to_email => to_email,
 		:from_email => from_email,
 		:server_domain => server_domain,
