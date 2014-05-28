@@ -11,6 +11,15 @@ include_recipe 'apt'
 include_recipe 'java'
 include_recipe 'jetty::default'
 
+
+apt_package "build-essential" do
+	action :install
+end
+
+gem_package "god" do
+	action :install
+end
+
 template "#{node[:jetty][:homedir]}/start.ini" do
 	source "start.ini.erb"
 	owner node[:jetty][:user]
@@ -32,11 +41,6 @@ s3_file "#{node[:jetty][:webappsdir]}/#{node[:nucleusproxy][:localwar]}" do
 	action :create
 	owner node[:jetty][:user]
 	group node[:jetty][:group]
-end
-
-gem_package "god" do
-	version "0.13.4"
-	action :install
 end
 
 directory "#{node[:nucleusproxy][:god][:goddir]}" do
