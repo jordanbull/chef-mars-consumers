@@ -22,7 +22,7 @@ tunnel_server_port = "#{node[:nucleusproxy][:smtp][:tunnel][:port]}"
 smtp_server_host = "#{node[:nucleusproxy][:smtp][:host]}"
 smtp_server_port = "#{node[:nucleusproxy][:smtp][:port]}"
 smtp_user = "#{node[:nucleusproxy][:smtp][:user]}"
-smtp_password = "#{node[:nucleusproxy][:smtp][:pass]}"
+smtp_password = "#{node[:nucleusproxy][:smtp][:password]}"
 
 apt_package "build-essential" do
 	action :install
@@ -105,8 +105,8 @@ template "#{node[:nucleusproxy][:god][:goddir]}/jvm_heap_usage.god.rb" do
 		:server_domain => server_domain,
 		:tunnel_server_host => tunnel_server_host,
 		:tunnel_server_port => tunnel_server_port,
-		:smtp_user => smtp_user,
-		:smtp_password => smtp_password
+		:server_user => smtp_user,
+		:server_password => smtp_password
 	})
 
 	notifies :run, "execute[start-god]", :delayed
