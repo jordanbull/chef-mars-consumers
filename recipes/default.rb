@@ -32,6 +32,10 @@ gem_package "god" do
 	action :install
 end
 
+apt_package "stunnel4" do
+	action :install
+end
+
 template "#{node[:jetty][:homedir]}/start.ini" do
 	source "start.ini.erb"
 	owner node[:jetty][:user]
@@ -53,6 +57,27 @@ s3_file "#{node[:jetty][:webappsdir]}/#{node[:nucleusproxy][:localwar]}" do
 	action :create
 	owner node[:jetty][:user]
 	group node[:jetty][:group]
+end
+
+template "/etc/stunnel/stunnel.conf" do
+	source "stunnel.conf.erb"
+
+	owner node[:jetty][:user]
+	group node[:jetty][:group]
+
+	variables({
+		:tunnel_server_port => tunnel_server_port,
+		:smtp_server_host => smtp_server_host,
+		:smtp_server_port => smtp_server_port
+	})
+
+	notifies :run, "execute[stunnel]"
+end
+
+execute "stunnel" do
+	user "root"
+	command "stunnel4 /etc/stunnel/stunnel.conf"
+	action :nothing
 end
 
 directory "#{node[:nucleusproxy][:god][:goddir]}" do
