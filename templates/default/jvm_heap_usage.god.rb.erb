@@ -51,7 +51,6 @@ God.watch do |w|
 		restart.condition(:process_running) do |c|
 			c.interval = 1.minute
 			c.running = false
-			c.times = [3, 3] # 3 out of 3 intervals
 			c.notify = {:contacts => ['tntdevs'], :category => 'SERVICE_RESTART', :priority => 1}
 		end
 	end
