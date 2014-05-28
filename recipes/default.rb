@@ -11,6 +11,18 @@ include_recipe 'apt'
 include_recipe 'java'
 include_recipe 'jetty::default'
 
+# set up variables
+to_email = "#{node[:nucleusproxy][:god][:notification][:to]}"
+from_email = "#{node[:nucleusproxy][:god][:notification][:from]}"
+server_domain = "#{node[:nucleusproxy][:email][:domain]}"
+
+tunnel_server_host = "#{node[:nucleusproxy][:smtp][:tunnel][:host]}"
+tunnel_server_port = "#{node[:nucleusproxy][:smtp][:tunnel][:port]}"
+
+smtp_server_host = "#{node[:nucleusproxy][:smtp][:host]}"
+smtp_server_port = "#{node[:nucleusproxy][:smtp][:port]}"
+smtp_user = "#{node[:nucleusproxy][:smtp][:user]}"
+smtp_password = "#{node[:nucleusproxy][:smtp][:pass]}"
 
 apt_package "build-essential" do
 	action :install
