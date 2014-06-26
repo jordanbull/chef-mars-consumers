@@ -2,11 +2,11 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-  config.vm.hostname = "nucleus-berkshelf"
+  config.vm.hostname = "mars-berkshelf"
 
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.box = "precise64"
-  config.vm.network "forwarded_port", guest: 8080, host: 18080
+  config.vm.network "forwarded_port", guest: 8080, host: 28080
 
   config.omnibus.chef_version = :latest
 
@@ -17,14 +17,14 @@ Vagrant.configure("2") do |config|
         :install_flavor => "openjdk"
       },
       :jetty => {
-      	:user => "vagrant",
-      	:group => "vagrant"
+        :user => "vagrant",
+        :group => "vagrant"
       },
-      :nucleusproxy => {
-        :environment => "dev",
-        :version => "1.22.5-SNAPSHOT-10",
-      	:access_key_id => $aws[:dev][:access_key_id],
-		:access_key_secret => $aws[:dev][:access_key_secret]
+      :war => {
+        :environment => "int",
+        :version => "1.0-SNAPSHOT",
+        :access_key_id => $aws[:dev][:access_key_id],
+        :access_key_secret => $aws[:dev][:access_key_secret],
       },
       :logstash => {
         :agent => {
