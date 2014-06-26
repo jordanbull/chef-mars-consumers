@@ -5,7 +5,7 @@ input {
 		type => "server_logs"
 	}
 	file {
-		path => "/opt/jetty/logs/tnt-nucleus.log"
+		path => "<%= node['mars']['app_logs'] %>"
 		codec => "json"
 		type => "application_logs"
 	}
@@ -24,7 +24,7 @@ filter {
 	}
 	if [type] != "application_logs" {
 		mutate {
-			add_field => { "environmentName" => "<%= node['nucleusproxy']['environment'] %>" }
+			add_field => { "environmentName" => "<%= node['war']['environment'] %>" }
 		}
 	}
 }

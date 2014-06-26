@@ -34,8 +34,8 @@ Vagrant.configure("2") do |config|
       }
     }
     chef.run_list = [
-      "recipe[nucleus-proxy]",
-      "recipe[logstash::agent]"
+      "recipe[mars]"
+      #"recipe[logstash::agent]"
     ]
   end
 end
