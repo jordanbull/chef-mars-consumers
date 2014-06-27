@@ -3,6 +3,7 @@
 
 Vagrant.configure("2") do |config|
   config.vm.hostname = "mars-berkshelf"
+  config.berkshelf.enabled = true
 
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.box = "precise64"
