@@ -16,24 +16,3 @@ default[:war][:localwar] = "root.war"
 
 default[:java][:jdk_version] = 7
 default[:java][:install_flavor] = "openjdk"
-
-=begin
-default[:war][:god][:goddir] = "/opt/god"
-default[:war][:god][:conditionsdir] = "/opt/god/conditions"
-default[:war][:god][:notification][:from] = "TNTTeamKitchener@ea.com"
-default[:war][:god][:notification][:to] = "TNTTeamKitchener@ea.com"
-
-default[:war][:smtp][:user] = ""
-default[:war][:smtp][:pass] = ""
-default[:war][:smtp][:tunnel][:host] = "localhost"
-default[:war][:smtp][:tunnel][:port] = "2525"
-default[:war][:smtp][:host] = "email-smtp.us-east-1.amazonaws.com"
-default[:war][:smtp][:port] = "465"
-default[:war][:email][:domain] = "ea.com"
-
-default[:logstash][:agent][:version] = "1.3.3"
-default[:logstash][:agent][:source_url] = "https://download.elasticsearch.org/logstash/logstash/logstash-1.3.3-flatjar.jar"
-default[:logstash][:agent][:debug] = false
-default[:logstash][:agent][:base_config_cookbook] = "nucleus-proxy"
-default[:logstash][:agent][:base_config] = "agent.conf.erb"
-=end

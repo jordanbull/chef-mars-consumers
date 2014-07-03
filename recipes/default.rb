@@ -18,12 +18,6 @@ apt_package "build-essential" do
 	action :install
 end
 
-=begin
-gem_package "god" do
-	action :install
-end
-=end
-
 template "#{node[:jetty][:homedir]}/start.ini" do
 	source "start.ini.erb"
 	owner node[:jetty][:user]
@@ -50,19 +44,3 @@ s3_file "#{node[:jetty][:webappsdir]}/#{node[:war][:localwar]}" do
 	owner node[:jetty][:user]
 	group node[:jetty][:group]
 end
-
-=begin
-directory "#{node[:nucleusproxy][:god][:goddir]}" do
-	action :create
-end
-
-directory "#{node[:nucleusproxy][:god][:conditionsdir]}" do
-	action :create
-end
-
-execute "start-god" do
-	user "root"
-	command "god"
-	action :nothing
-end
-=end

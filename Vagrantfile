@@ -21,21 +21,10 @@ Vagrant.configure("2") do |config|
         :group => "vagrant"
       },
       :war => {
-        :environment => "int",
-        :version => "1.0-SNAPSHOT",
         :access_key_id => $aws[:dev][:access_key_id],
         :access_key_secret => $aws[:dev][:access_key_secret],
       },
-      :logstash => {
-        :agent => {
-          :base_config => "localtest.agent.conf.erb",
-          :debug => true
-        }
-      }
     }
-    chef.run_list = [
-      "recipe[mars]"
-      #"recipe[logstash::agent]"
-    ]
+    chef.run_list = ["recipe[mars]"]
   end
 end
