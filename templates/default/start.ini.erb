@@ -18,6 +18,8 @@
 # Below are some recommended options for Sun's JRE
 #-----------------------------------------------------------
 --exec
+-Dspring.profiles.active=consumer
+-DconsumerQ=<%= @queue %>
 -Denvironment.name=<%= @environment %>
 -Dprop.files.location=<%= @properties_path %>
 # -Dorg.apache.jasper.compiler.disablejsr199=true

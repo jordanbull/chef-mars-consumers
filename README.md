@@ -8,8 +8,11 @@ Pulls a specified version of the MARS service from the build/release bucket and 
 
 # Attributes
 
+*Note: `default[:mars][:queue]` should be one of MAT, NANIGANS, FIKSU_IOS , FIKSU_ANDROID, BURSTLY, or KOCHAVA*
+
 | Attribute | Default Value | Description |
 | --------- | ------------- | ----------- |
+| `default[:mars][:queue]` | `MAT` | The queue to consume messages from |
 | `default[:war][:name]` | `mars` | Name of the artifact to deploy |
 | `default[:war][:version]` | `1.0-SNAPSHOT` | Version of the warfile to deploy |
 | `default[:war][:environment]` | `dev` | The TNT environment being deployed to |
