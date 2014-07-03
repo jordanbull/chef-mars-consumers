@@ -4,8 +4,9 @@ default[:war][:version] = "1.0-SNAPSHOT"
 default[:war][:environment] = "dev"
 
 # mars-specific properties
-default[:mars][:app_logs] = "/var/log/#{node[:war][:name]}/#{node[:war][:name]}.log"
+default[:mars][:queue] = "MAT"
 default[:mars][:properties] = "int"
+default[:mars][:app_logs] = "/var/log/#{node[:war][:name]}/#{node[:war][:name]}.log"
 
 # general tnt deployment attributes
 default[:war][:source][:warfile] = "#{node[:war][:name]}-#{node[:war][:version]}.war"

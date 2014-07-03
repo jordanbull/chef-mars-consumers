@@ -24,6 +24,7 @@ template "#{node[:jetty][:homedir]}/start.ini" do
 	group node[:jetty][:group]
 
 	variables({
+		:queue => node[:mars][:queue],
 		:environment => node[:war][:environment],
 		:properties_path => node[:mars][:properties]
 	})
