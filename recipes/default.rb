@@ -2,7 +2,7 @@
 # Cookbook Name:: mars
 # Recipe:: default
 #
-# Copyright (C) 2014 YOUR_NAME
+# Copyright (C) 2014 Electronic Arts
 # 
 # All rights reserved - Do Not Redistribute
 #
@@ -10,9 +10,6 @@
 include_recipe 'apt'
 include_recipe 'java'
 include_recipe 'jetty::default'
-
-# set up variables
-service_env = "#{node[:war][:environment]}"
 
 apt_package "build-essential" do
 	action :install
@@ -24,7 +21,7 @@ template "#{node[:jetty][:homedir]}/start.ini" do
 	group node[:jetty][:group]
 
 	variables({
-		:queue => node[:mars][:queue],
+		:queue => queueForLayer(node),
 		:environment => node[:war][:environment],
 		:properties_path => node[:mars][:properties]
 	})
@@ -44,4 +41,17 @@ s3_file "#{node[:jetty][:webappsdir]}/#{node[:war][:localwar]}" do
 	action :create
 	owner node[:jetty][:user]
 	group node[:jetty][:group]
+end
+
+def queueForLayer(node)
+	layers = node[:opsworks][:instance][:layers]
+	map = node[:mars][:opsworks][:layers]
+	queue = if layers.size == 1 and map.has_key?(layers.first)
+		map[layers.first]
+	else
+		node[:mars][:queue]
+	end
+
+	log "Mars Consumer for: #{queue}"
+	queue
 end
