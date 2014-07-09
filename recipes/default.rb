@@ -20,8 +20,17 @@ template "#{node[:jetty][:homedir]}/start.ini" do
 	owner node[:jetty][:user]
 	group node[:jetty][:group]
 
+	# figure out queue name by opsworks layer name
+	layers = node[:opsworks][:instance][:layers]
+	map = node[:mars][:opsworks][:layers]
+	queue = if layers.size == 1 and map.has_key?(layers.first)
+		map[layers.first]
+	else
+		node[:mars][:queue]
+	end
+
 	variables({
-		:queue => queueForLayer(node),
+		:queue => queue,
 		:environment => node[:war][:environment],
 		:properties_path => node[:mars][:properties]
 	})
@@ -41,17 +50,4 @@ s3_file "#{node[:jetty][:webappsdir]}/#{node[:war][:localwar]}" do
 	action :create
 	owner node[:jetty][:user]
 	group node[:jetty][:group]
-end
-
-def queueForLayer(node)
-	layers = node[:opsworks][:instance][:layers]
-	map = node[:mars][:opsworks][:layers]
-	queue = if layers.size == 1 and map.has_key?(layers.first)
-		map[layers.first]
-	else
-		node[:mars][:queue]
-	end
-
-	log "Mars Consumer for: #{queue}"
-	queue
 end
