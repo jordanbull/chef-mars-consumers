@@ -16,6 +16,24 @@ default[:mars][:opsworks][:layers] = {
 	"mars-kochava-consumers"       => "KOCHAVA"
 }
 
+# tell sumologic collector cookbook to not search for credentials data bag
+default['sumologic']['credentials'] = nil
+
+# set up sources property for sumologic collector cookbook
+default['sumologic']['sources'] = [
+	{
+		"sourceType" 					=> "LocalFile",
+		"name"							=> "EB-MARS",
+		"pathExpression"				=> "#{default[:mars][:app_logs]}",
+		"category"						=> "EB-MARS",
+		"useAutolineMatching"			=> false,
+		"multilineProcessingEnabled"	=> false,
+		"automaticDateParsing"			=> true,
+		"forceTimeZone"					=> false,
+		"defaultDateFormat"				=> "dd/MMM/yyyy:HH:mm:ss ZZZZ"
+	}
+]
+
 # default to empty list when running Chef without AWS OpsWorks
 default[:opsworks][:instance][:layers] = []
 
