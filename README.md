@@ -7,7 +7,7 @@ Pulls a specified version of the MARS service from the build/release bucket and 
 ## Configuring for General Use
 This Cookbook is intended for use with AWS OpsWorks, but could be repurposed to work with Chef anywhere.
 
-The only dependency on OpsWorks is the `node[:opsworks][:instance][:layers]` attribute, which is used to determine which queue to consume from (see default.rb:34-39)
+The only dependency on OpsWorks is the `node[:opsworks][:instance][:layers]` attribute, which is used to determine which queue to consume from (see default.rb:18-29)
 
 ## OpsWorks Configuration
 Note that Chef Attributes are specific to an OpsWorks Stack, and cannot be overridden on a per-Layer basis.
@@ -26,32 +26,31 @@ You can use anything for the Layer Name, but the short name must be one of the f
 
 | Attribute | Default Value | Description |
 | --------- | ------------- | ----------- |
-| `default[:mars][:queue]` | `MAT` | The queue to consume messages from |
+| `default[:mars][:input_queue]` | `nil` | The queue to consume messages from. If this is set, the recipe will try to resolve the queue based on the layer name. |
+| `default[:mars][:env]` | `dev` | The environment being deployed to. This is passed to the application to load the appropriate config settings. |
 | `default[:war][:name]` | `mars` | Name of the artifact to deploy |
 | `default[:war][:version]` | `1.0-SNAPSHOT` | Version of the warfile to deploy |
-| `default[:war][:environment]` | `dev` | The TNT environment being deployed to |
 | `default[:war][:source][:warfile]` | `#{node[:war][:name]}-#{node[:war][:version]}.war` | Name of the warfile |
 | `default[:war][:source][:s3][:bucket]` | `tnt-build-release` | Name of the bucket to find the war in |
-| `default[:war][:source][:s3][:path]` | `#{node[:war][:name]}/bamboo` | Path within the S3 bucket |
+| `default[:war][:source][:s3][:path]` | `#{node[:war][:name]}` | Path within the S3 bucket |
 | `default[:war][:localwar]` | `root.war` | Name of the warfile deployed to jetty |
 | `default[:war][:logs][:application]` | `/var/log/#{node[:war][:name]}/#{node[:war][:name]}.log` | The file path for the application logs file |
 
-## `default[:mars][:queue]`
+## `default[:mars][:input_queue]`
 
  * The default queue to use, if it cannot be inferred from the OpsWorks Layer short name
- * Should be one of MAT, NANIGANS, FIKSU_IOS , FIKSU_ANDROID, BURSTLY, or KOCHAVA
 
 ## `default[:mars][:opsworks][:layers]`
 
 The map of layer short names to built-in queue consumers
 ```
 {
-	"mars-burstly-consumers":       "BURSTLY",
-	"mars-nanigans-consumers":      "NANIGANS",
-	"mars-fiksu-ios-consumers":     "FIKSU_IOS",
-	"mars-fiksu-android-consumers": "FIKSU_ANDROID",
-	"mars-mat-consumers":           "MAT",
-	"mars-kochava-consumers":       "KOCHAVA"
+	"mars-burstly-consumers":       "mars-burstly-#{node[:mars][:env]}",
+	"mars-nanigans-consumers":      "mars-nanigans-#{node[:mars][:env]}",
+	"mars-fiksu-ios-consumers":     "mars-fiksu_ios-#{node[:mars][:env]}",
+	"mars-fiksu-android-consumers": "mars-fiksu_android-#{node[:mars][:env]}",
+	"mars-mat-consumers":           "mars-mat-#{node[:mars][:env]}",
+	"mars-kochava-consumers":       "mars-kochava-#{node[:mars][:env]}"
 }
 ```
 

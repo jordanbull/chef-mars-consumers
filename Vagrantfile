@@ -21,9 +21,14 @@ Vagrant.configure("2") do |config|
         :group => "vagrant"
       },
       :war => {
+      	:version => "feature-test-cleanup-1",
         :access_key_id => $aws[:dev][:access_key_id],
         :access_key_secret => $aws[:dev][:access_key_secret],
       },
+      :mars => {
+        :env => "local",
+        :input_queue => "mars-allpartners-local"
+      }
     }
     chef.run_list = ["recipe[mars]"]
   end

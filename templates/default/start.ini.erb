@@ -19,9 +19,9 @@
 #-----------------------------------------------------------
 --exec
 -Dspring.profiles.active=consumer
--DconsumerQ=<%= @queue %>
--Denvironment.name=<%= @environment %>
--Dprop.files.location=<%= @properties_path %>
+-Dmars.consumer.inputqueue=<%= @queue %>
+-Dmars.env=<%= @environment %>
+#-Dprop.files.location=<%= @properties_path %>
 # -Dorg.apache.jasper.compiler.disablejsr199=true
 # -Dcom.sun.management.jmxremote
 # -Dorg.eclipse.jetty.util.log.IGNORED=true
