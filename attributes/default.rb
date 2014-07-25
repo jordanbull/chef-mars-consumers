@@ -7,13 +7,23 @@ default[:mars][:env] = "dev"
 default[:mars][:input_queue] = nil
 default[:mars][:properties] = "#{node[:mars][:env]}"
 default[:mars][:app_logs] = "/var/log/#{node[:war][:name]}/#{node[:war][:name]}.log"
-default[:mars][:opsworks][:layers] = {
-	"mars-burstly-consumers"       => "mars-burstly-#{node[:mars][:env]}",
-	"mars-nanigans-consumers"      => "mars-nanigans-#{node[:mars][:env]}",
-	"mars-fiksu-ios-consumers"     => "mars-fiksu_ios-#{node[:mars][:env]}",
-	"mars-fiksu-android-consumers" => "mars-fiksu_android-#{node[:mars][:env]}",
-	"mars-mat-consumers"           => "mars-mat-#{node[:mars][:env]}",
-	"mars-kochava-consumers"       => "mars-kochava-#{node[:mars][:env]}"
+
+default[:mars][:consumers][:layer_to_queuemap] = {
+	"mars-burstly-consumers"       => "burstly",
+	"mars-nanigans-consumers"      => "nanigans",
+	"mars-fiksu-ios-consumers"     => "fiksu_ios",
+	"mars-fiksu-android-consumers" => "fiksu_android",
+	"mars-mat-consumers"           => "mat",
+	"mars-kochava-consumers"       => "kochava"
+}
+
+default[:mars][:queue][:map] = {
+	"burstly"       => "mars-burstly-#{node[:mars][:env]}",
+	"nanigans"      => "mars-nanigans-#{node[:mars][:env]}",
+	"fiksu-ios"     => "mars-fiksu_ios-#{node[:mars][:env]}",
+	"fiksu-android" => "mars-fiksu_android-#{node[:mars][:env]}",
+	"mat"           => "mars-mat-#{node[:mars][:env]}",
+	"kochava"       => "mars-kochava-#{node[:mars][:env]}"
 }
 
 # default to empty list when running Chef without AWS OpsWorks

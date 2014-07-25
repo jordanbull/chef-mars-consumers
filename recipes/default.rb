@@ -17,16 +17,19 @@ end
 
 # figure out queue name by opsworks layer name
 layers = node[:opsworks][:instance][:layers]
-map = node[:mars][:opsworks][:layers]
+layer_to_queuemap = node[:mars][:consumers][:layer_to_queuemap]
+queuemap = default[:mars][:queue][:map]
 queue = if node[:mars].attribute?(:input_queue) && node[:mars][:input_queue] != nil
-		node[:mars][:input_queue]
-	else
-		if layers.size == 1 and map.has_key?(layers.first)
-			map[layers.first]
+			node[:mars][:input_queue]
+		elsif layers.size == 1 and layer_to_queuemap.has_key?(layers.first)
+			if queuemap.has_key?(layer_to_queuemap[layers.first])
+				queuemap[layer_to_queuemap[layers.first]]
+			else
+				raise "Coule not find mapping for queuename for 'key #{layer_to_queuemap[layers.first]}'"
+			end
 		else
 			raise "Could not determine queue from either layer or attribute."
 		end
-	end
 
 
 template "#{node[:jetty][:homedir]}/start.ini" do
