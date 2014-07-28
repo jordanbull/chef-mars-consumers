@@ -1,0 +1,6 @@
+name             'mars-consumer'
+maintainer       'EADP Mobile Platform Kitchener'
+maintainer_email 'MobilePlatformKitchener@ea.com'
+license          'All rights reserved'
+description      'Installs and configures MARS Consumers'
+version          '0.1.0'
