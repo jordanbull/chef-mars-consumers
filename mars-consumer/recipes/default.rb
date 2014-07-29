@@ -50,18 +50,4 @@ template "#{sumo_collector_config_path}" do
 	})
 end
 
-remote_file "#{sumo_collector_rpm_path}" do
-	owner "root"
-	group "root"
-	source "https://collectors.sumologic.com/rest/download/rpm/64"
-	action :create
-end
-
-apt_package "rpm" do
-  action :install
-end
-
-rpm_package "SumoCollector" do
-	source "#{sumo_collector_rpm_path}"
-	action :install
-end
+include_recipe 'mars-consumer::install'
