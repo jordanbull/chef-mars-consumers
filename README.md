@@ -33,7 +33,7 @@ Example map of layer short names to input queue
 }
 ```
 
-Example opsworks stack custom json
+# Example opsworks stack custom json
 ```
 {
 	"sumologic" : {
