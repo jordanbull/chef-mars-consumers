@@ -10,9 +10,9 @@
 sumo_access_id = node[:sumologic][:access_id]
 sumo_access_key = node[:sumologic][:access_key]
 sumo_log_source_name = node[:sumologic][:source_name]
+sumo_log_category = node[:sumologic][:category]
 sumo_log_path_express = node[:sumologic][:path_expression]
 sumo_collector_config_dir = "/etc/sumocollector"
-sumo_collector_rpm_path = sumo_collector_config_dir + "/SumoCollector.rpm"
 sumo_collector_config_path = sumo_collector_config_dir + "/collector.json"
 
 if sumo_access_id.nil? || sumo_access_key.nil?
@@ -46,6 +46,7 @@ template "#{sumo_collector_config_path}" do
 	mode 0644
 	variables({
 		:source_name => sumo_log_source_name,
+		:category => sumo_log_category,
 		:path_expression => sumo_log_path_express
 	})
 end

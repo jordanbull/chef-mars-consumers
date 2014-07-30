@@ -4,6 +4,7 @@ default[:mars][:env] = "dev"
 default[:sumologic][:access_id] = nil
 default[:sumologic][:access_key] = nil
 default[:sumologic][:source_name] = "EB-MARS-#{node[:mars][:env]}"
+default[:sumologic][:category] = "EB-MARS-#{node[:mars][:env]}"
 default[:sumologic][:path_expression] = "/var/log/tomcat7/mars.log"
 
 #Platform Specific Attributes
