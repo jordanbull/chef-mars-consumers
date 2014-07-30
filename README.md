@@ -12,7 +12,6 @@ This Cookbook is intended for use with AWS OpsWorks, but could be repurposed to 
 | Attribute | Default Value | Description |
 | --------- | ------------- | ----------- |
 | `default[:mars][:env]` | `dev` | mars environment |
-| `default[:war][:version]` | `1.0-SNAPSHOT` | Version of the warfile to deploy |
 | `default[:mars][:consumers][:layer_to_queue_map]` | nil | opsworks layer short name to consumer input queue map |
 | `default[:sumologic][:access_id]` | nil | sumologic access key id |
 | `default[:sumologic][:access_key]` | nil | sumologic access key secrete |
@@ -45,9 +44,6 @@ Example map of layer short names to input queue
 		"consumers" : {
 			"layer_to_queue_map" : insert above layer_to_queue_map example
 		}
-	},
-	"war" : {
-		"version" : "develop-20"
 	}
 }
 ```
