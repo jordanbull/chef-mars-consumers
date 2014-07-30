@@ -9,9 +9,8 @@
 
 sumo_access_id = node[:sumologic][:access_id]
 sumo_access_key = node[:sumologic][:access_key]
-sumo_log_source_name = node[:sumologic][:source_name]
 sumo_log_category = node[:sumologic][:category]
-sumo_log_path_express = node[:sumologic][:path_expression]
+sumo_log_source_dir = node[:sumologic][:source_dir]
 sumo_collector_config_dir = "/etc/sumocollector"
 sumo_collector_config_path = sumo_collector_config_dir + "/collector.json"
 
@@ -45,9 +44,8 @@ template "#{sumo_collector_config_path}" do
 	group 'root'
 	mode 0644
 	variables({
-		:source_name => sumo_log_source_name,
 		:category => sumo_log_category,
-		:path_expression => sumo_log_path_express
+		:source_dir => sumo_log_source_dir
 	})
 end
 

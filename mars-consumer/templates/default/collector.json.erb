@@ -3,11 +3,24 @@
 	"sources": [
 		{
 			"sourceType": "LocalFile",
-			"name": "<%= @source_name %>",
-			"pathExpression": "<%= @path_expression %>",
+			"name": "<%= @category %>-mars_log",
+			"pathExpression": "<%= @source_dir %>/mars.log",
 			"category": "<%= @category %>",
 			"useAutolineMatching": false,
-			"multilineProcessingEnabled": false,
+			"multilineProcessingEnabled": true,
+			"manualPrefixRegexp": "\\[[A-Z]+\\]",
+			"automaticDateParsing": true,
+			"forceTimeZone": false,
+			"defaultDateFormat": "dd/MMM/yyyy:HH:mm:ss ZZZZ"
+		},
+		{
+			"sourceType": "LocalFile",
+			"name": "<%= @category %>-catalina_out",
+			"pathExpression": "<%= @source_dir %>/catalina.out",
+			"category": "<%= @category %>",
+			"useAutolineMatching": false,
+			"multilineProcessingEnabled": true,
+			"manualPrefixRegexp": "[A-Z]+:",
 			"automaticDateParsing": true,
 			"forceTimeZone": false,
 			"defaultDateFormat": "dd/MMM/yyyy:HH:mm:ss ZZZZ"

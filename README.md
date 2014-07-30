@@ -15,9 +15,8 @@ This Cookbook is intended for use with AWS OpsWorks, but could be repurposed to 
 | `default[:mars][:consumers][:layer_to_queue_map]` | nil | opsworks layer short name to consumer input queue map |
 | `default[:sumologic][:access_id]` | nil | sumologic access key id |
 | `default[:sumologic][:access_key]` | nil | sumologic access key secrete |
-| `default[:sumologic][:source_name]` | `EB-MARS-#{node[:mars][:env]}` | sumologic collector source name |
 | `default[:sumologic][:category]` | `EB-MARS-#{node[:mars][:env]}` | sumologic collector category |
-| `default[:sumologic][:path_expression]` | `/var/log/tomcat7/mars.log` | sumologic collector log source location |
+| `default[:sumologic][:source_dir]` | `/var/log/tomcat7` | sumologic collector log source directory |
 
 ## `default[:mars][:consumers][:layer_to_queue_map]`
 
