@@ -18,6 +18,11 @@ if sumo_access_id.nil? || sumo_access_key.nil?
 	raise "node[:sumologic][:access_id] and node [:sumologic][:access_key] must be set"
 end
 
+if Dir.exist? "#{node['sumologic']['installDir']}"
+	log "Sumologic already installed. Nothing to do here."
+	return
+end
+
 template "/etc/sumo.conf" do
 	source "sumo.conf.erb"
 	owner 'root'
